@@ -241,7 +241,7 @@ export default function App(){
   // Shared page content (used in both layouts)
   const PageContent = ({mobile=false,compact=false}) => (
     <div style={{padding: mobile ? "16px 16px 24px" : compact ? "20px 20px 24px" : "28px 32px", maxWidth: mobile||compact ? "none" : 720, margin:"0 auto"}}>
-      {pg==="overview"&&<div><h1 style={{fontSize: mobile?20:24,fontWeight:700,marginBottom:20}}>Overview</h1><div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:24}}>Performance metrics go here</div></div>}
+      {pg==="overview"&&<div><div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:24}}>Performance metrics go here</div></div>}
       {pg==="knowledge"&&<div>
         {selectedKS ? (
           /* ── Detail view ── */
@@ -286,8 +286,7 @@ export default function App(){
         ) : (
           /* ── List view ── */
           <div>
-            <h1 style={{fontSize:mobile?20:24,fontWeight:700,marginBottom:4}}>Knowledge</h1>
-            <p style={{fontSize:14,color:"#6e6e6e",marginBottom:24}}>Build a solid knowledge base for AI to work from</p>
+            <p style={{fontSize:14,color:"#6e6e6e",marginBottom:20}}>Build a solid knowledge base for AI to work from</p>
 
             {/* Add source cards */}
             <div style={{display:"grid",gridTemplateColumns:(mobile||compact)?"1fr 1fr":"repeat(4,1fr)",gap:12,marginBottom:28}}>
@@ -337,11 +336,9 @@ export default function App(){
           </div>
         )}
       </div>}
-      {pg==="behavior"&&<div><div style={{display:"flex",justifyContent:"space-between",marginBottom:20}}><h1 style={{fontSize: mobile?20:24,fontWeight:700}}>Behavior</h1><button style={{fontSize:14,color:"#fff",background:"#0078ff",border:"none",borderRadius:8,padding:"8px 20px",cursor:"pointer",fontWeight:600,fontFamily:"inherit"}}>Save</button></div>{[{k:"role",t:"AI Role",p:"e.g. Wedding Cake IG Creator",m:false},{k:"voice",t:"Brand Voice",p:"e.g. Warm tone...",m:true},{k:"guardrails",t:"Guardrails",p:"e.g. Never make promises...",m:true}].map(f=><div key={f.k} style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"20px 24px",marginBottom:16}}><div style={{fontSize:15,fontWeight:700,marginBottom:10}}>{f.t}</div>{f.m?<textarea value={beh[f.k]} onChange={e=>setBeh(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p} style={{width:"100%",minHeight:80,padding:12,borderRadius:10,border:"1px solid #e5e5e3",fontSize:14,background:"#fafafa",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical",outline:"none"}}/>:<input value={beh[f.k]} onChange={e=>setBeh(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p} style={{width:"100%",padding:12,borderRadius:10,border:"1px solid #e5e5e3",fontSize:14,background:"#fafafa",fontFamily:"inherit",boxSizing:"border-box",outline:"none"}}/>}</div>)}{!hb&&<button onClick={()=>setBeh(BF)} style={{fontSize:13,color:"#0078ff",background:"#eef4ff",border:"1px solid #bfdbfe",borderRadius:8,padding:"8px 16px",cursor:"pointer",fontFamily:"inherit"}}>Fill example</button>}</div>}
+      {pg==="behavior"&&<div><div style={{display:"flex",justifyContent:"flex-end",marginBottom:20}}><button style={{fontSize:14,color:"#fff",background:"#0078ff",border:"none",borderRadius:8,padding:"8px 20px",cursor:"pointer",fontWeight:600,fontFamily:"inherit"}}>Save</button></div>{[{k:"role",t:"AI Role",p:"e.g. Wedding Cake IG Creator",m:false},{k:"voice",t:"Brand Voice",p:"e.g. Warm tone...",m:true},{k:"guardrails",t:"Guardrails",p:"e.g. Never make promises...",m:true}].map(f=><div key={f.k} style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"20px 24px",marginBottom:16}}><div style={{fontSize:15,fontWeight:700,marginBottom:10}}>{f.t}</div>{f.m?<textarea value={beh[f.k]} onChange={e=>setBeh(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p} style={{width:"100%",minHeight:80,padding:12,borderRadius:10,border:"1px solid #e5e5e3",fontSize:14,background:"#fafafa",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical",outline:"none"}}/>:<input value={beh[f.k]} onChange={e=>setBeh(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p} style={{width:"100%",padding:12,borderRadius:10,border:"1px solid #e5e5e3",fontSize:14,background:"#fafafa",fontFamily:"inherit",boxSizing:"border-box",outline:"none"}}/>}</div>)}{!hb&&<button onClick={()=>setBeh(BF)} style={{fontSize:13,color:"#0078ff",background:"#eef4ff",border:"1px solid #bfdbfe",borderRadius:8,padding:"8px 16px",cursor:"pointer",fontFamily:"inherit"}}>Fill example</button>}</div>}
 
       {pg==="skills"&&<div>
-        <h1 style={{fontSize: mobile?20:24,fontWeight:700,marginBottom:6}}>Skills</h1>
-
         {fv&&<div style={{maxWidth:560,margin:"0 auto",paddingTop:16}}>
           <AB>{cs===0?<span>{t1}<span style={{opacity:t1.length<GM.length?1:0,animation:"pls 1s infinite"}}>|</span></span>:GM}</AB>
           {cs===0&&sc1&&<div style={{marginLeft:(mobile||compact)?0:42,display:"flex",flexDirection:"column",gap:8,animation:"fd .4s ease"}}><CB icon="database" t="Help me answer customer questions faster" d="I will reply to DMs using your knowledge base, 24/7" onClick={()=>act("answer")}/><CB icon="target" t="Find and qualify my best leads" d="Screen people and route the right ones to you" onClick={()=>act("qualify")} delay={0.1}/><CB icon="flag" t="Keep my community engaged" d="Reply to nice comments in your voice" onClick={()=>act("engage")} delay={0.2}/></div>}
@@ -777,24 +774,31 @@ export default function App(){
         <GlobalSidebarItem icon="settings" active={globalTab==="settings"} onClick={()=>setGlobalTab("settings")}/>
         <GlobalSidebarItem icon="help" active={globalTab==="help"} onClick={()=>setGlobalTab("help")}/>
       </div>
-      {/* Sub-nav */}
-      <div style={{width:200,flexShrink:0,background:"#f4f4f4",borderRight:"1px solid #e5e5e3",padding:"12px 10px",display:"flex",flexDirection:"column",gap:2}}>
-        {NV.map(n=><button key={n.id} onClick={()=>go(n.id)} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"9px 12px",borderRadius:8,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:pg===n.id?600:400,background:pg===n.id?"#e5e5e3":"transparent",color:pg===n.id?"#1a1a1a":"#6e6e6e",textAlign:"left"}}><Ic name={n.i} size={18} color={pg===n.id?"#1a1a1a":"#a0a0a0"}/>{n.l}{n.b&&<span style={{fontSize:10,fontWeight:700,padding:"1px 6px",borderRadius:4,background:"#5b5fc7",color:"#fff",marginLeft:"auto"}}>{n.b}</span>}</button>)}
-      </div>
-      {/* Content + resizable playground */}
-      <div ref={splitRef} style={{display:"flex",flex:1,overflow:"hidden",userSelect:dragging?"none":"auto"}}>
-        <div style={{flex:1,overflow:"auto",background:"#f4f4f4"}}>
-          {PageContent({})}
+      {/* Tab strip + split */}
+      <div style={{display:"flex",flexDirection:"column",flex:1,overflow:"hidden"}}>
+        <div style={{display:"flex",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0}}>
+          {NV.map(n=>(
+            <button key={n.id} onClick={()=>go(n.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"10px 16px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
+              <Ic name={n.i} size={15} color={pg===n.id?"#1a1a1a":"#a0a0a0"}/>{n.l}
+              {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
+            </button>
+          ))}
         </div>
-        {/* Drag handle */}
-        <div onMouseDown={startResize} style={{width:6,flexShrink:0,cursor:"col-resize",background:dragging?"#d0d0ce":"#e5e5e3",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="#d0d0ce"} onMouseLeave={e=>{if(!dragging)e.currentTarget.style.background="#e5e5e3";}}>
-          <div style={{display:"flex",flexDirection:"column",gap:3}}>
-            {[0,1,2].map(i=><div key={i} style={{width:2,height:10,borderRadius:1,background:"#a0a0a0"}}/>)}
+        {/* Content + resizable playground */}
+        <div ref={splitRef} style={{display:"flex",flex:1,overflow:"hidden",userSelect:dragging?"none":"auto"}}>
+          <div style={{flex:1,overflow:"auto",background:"#f4f4f4"}}>
+            {PageContent({})}
           </div>
-        </div>
-        {/* AI Playground */}
-        <div style={{width:playgroundWidth||"35%",flexShrink:0,borderLeft:"none",background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
-          {PlaygroundPanel({})}
+          {/* Drag handle */}
+          <div onMouseDown={startResize} style={{width:6,flexShrink:0,cursor:"col-resize",background:dragging?"#d0d0ce":"#e5e5e3",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="#d0d0ce"} onMouseLeave={e=>{if(!dragging)e.currentTarget.style.background="#e5e5e3";}}>
+            <div style={{display:"flex",flexDirection:"column",gap:3}}>
+              {[0,1,2].map(i=><div key={i} style={{width:2,height:10,borderRadius:1,background:"#a0a0a0"}}/>)}
+            </div>
+          </div>
+          {/* AI Playground */}
+          <div style={{width:playgroundWidth||"35%",flexShrink:0,borderLeft:"none",background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
+            {PlaygroundPanel({})}
+          </div>
         </div>
       </div>
     </div>
