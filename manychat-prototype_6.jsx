@@ -101,7 +101,7 @@ export default function App(){
   const startResize=(e)=>{
     e.preventDefault();
     const startX=e.clientX;
-    const startW=playgroundWidth||(splitRef.current?splitRef.current.offsetWidth*0.5:420);
+    const startW=playgroundWidth||(splitRef.current?splitRef.current.offsetWidth*0.35:360);
     setDragging(true);
     const onMove=(ev)=>{
       if(!splitRef.current) return;
@@ -290,7 +290,7 @@ export default function App(){
             <p style={{fontSize:14,color:"#6e6e6e",marginBottom:24}}>Build a solid knowledge base for AI to work from</p>
 
             {/* Add source cards */}
-            <div style={{display:"grid",gridTemplateColumns:(mobile||compact)?"1fr 1fr":"repeat(4,auto)",gap:12,marginBottom:28}}>
+            <div style={{display:"grid",gridTemplateColumns:(mobile||compact)?"1fr 1fr":"repeat(4,1fr)",gap:12,marginBottom:28}}>
               {[
                 {icon:"link",label:"Add link",soon:false},
                 {icon:"textlines",label:"Add text",soon:false},
@@ -793,7 +793,7 @@ export default function App(){
           </div>
         </div>
         {/* AI Playground */}
-        <div style={{width:playgroundWidth||"50%",flexShrink:0,borderLeft:"none",background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
+        <div style={{width:playgroundWidth||"35%",flexShrink:0,borderLeft:"none",background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
           {PlaygroundPanel({})}
         </div>
       </div>
