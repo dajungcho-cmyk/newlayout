@@ -372,56 +372,56 @@ export default function App(){
 
   // Shared playground panel content
   const PlaygroundPanel = ({onClose=null}) => <>
-    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 16px",height:48,borderBottom:(anyOn||!fv)?"none":"1px solid #e5e5e3",flexShrink:0}}>
-      <span style={{fontSize:14,fontWeight:700}}>AI Playground</span>
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 16px",height:48,borderBottom:(anyOn||!fv)?"none":"1px solid #2d2d2d",flexShrink:0}}>
+      <span style={{fontSize:14,fontWeight:700,color:"#fff"}}>AI Playground</span>
       <div style={{display:"flex",gap:8,alignItems:"center"}}>
-        <button onClick={()=>{setMs([]);setTyp(false);}} style={{fontSize:13,color:"#6e6e6e",background:"none",border:"1px solid #e5e5e3",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>Restart</button>
-        {onClose&&<button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",padding:4,display:"flex",alignItems:"center"}}><Ic name="x" size={18} color="#6e6e6e"/></button>}
+        <button onClick={()=>{setMs([]);setTyp(false);}} style={{fontSize:13,color:"#888",background:"none",border:"1px solid #2d2d2d",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>Restart</button>
+        {onClose&&<button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",padding:4,display:"flex",alignItems:"center"}}><Ic name="x" size={18} color="#888"/></button>}
       </div>
     </div>
-    {(anyOn||!fv)&&<div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 16px",borderBottom:"1px solid #e5e5e3",flexShrink:0}}><span style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase"}}>Testing:</span><span style={{fontSize:12,padding:"3px 10px",borderRadius:6,background:"#f0f0ee",fontWeight:500}}>AI Replies</span>{sk.qualify&&<span style={{fontSize:12,padding:"3px 10px",borderRadius:6,background:"#f0f0ee",fontWeight:500}}>Qualify</span>}{sk.engage&&<span style={{fontSize:12,padding:"3px 10px",borderRadius:6,background:"#f0f0ee",fontWeight:500}}>Comments</span>}</div>}
+    {(anyOn||!fv)&&<div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 16px",borderBottom:"1px solid #2d2d2d",flexShrink:0}}><span style={{fontSize:11,fontWeight:600,color:"#555",textTransform:"uppercase"}}>Testing:</span><span style={{fontSize:12,padding:"3px 10px",borderRadius:6,background:"#222",color:"#ccc",fontWeight:500}}>AI Replies</span>{sk.qualify&&<span style={{fontSize:12,padding:"3px 10px",borderRadius:6,background:"#222",color:"#ccc",fontWeight:500}}>Qualify</span>}{sk.engage&&<span style={{fontSize:12,padding:"3px 10px",borderRadius:6,background:"#222",color:"#ccc",fontWeight:500}}>Comments</span>}</div>}
     <div style={{flex:1,overflow:"auto",padding:16}}>
       {ms.length===0&&!hb&&<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"100%",gap:0}}>
-        <div style={{width:44,height:44,borderRadius:"50%",background:"#fff7ed",border:"1px solid #fed7aa",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:14}}>
+        <div style={{width:44,height:44,borderRadius:"50%",background:"rgba(249,115,22,.15)",border:"1px solid rgba(249,115,22,.3)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:14}}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#f97316" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </div>
-        <div style={{fontSize:14,fontWeight:600,color:"#1a1a1a",marginBottom:6}}>No behavior configured</div>
-        <div style={{fontSize:13,color:"#6e6e6e",textAlign:"center",maxWidth:220,lineHeight:1.5,marginBottom:16}}>Your AI has no defined role or voice. Responses may be generic.</div>
-        <button onClick={()=>{go("behavior");setShowPlayground(false);}} style={{fontSize:13,fontWeight:600,color:"#fff",background:"#1a1a1a",border:"none",borderRadius:8,padding:"8px 18px",cursor:"pointer",fontFamily:"inherit"}}>Set up Behavior →</button>
+        <div style={{fontSize:14,fontWeight:600,color:"#fff",marginBottom:6}}>No behavior configured</div>
+        <div style={{fontSize:13,color:"#888",textAlign:"center",maxWidth:220,lineHeight:1.5,marginBottom:16}}>Your AI has no defined role or voice. Responses may be generic.</div>
+        <button onClick={()=>{go("behavior");setShowPlayground(false);}} style={{fontSize:13,fontWeight:600,color:"#111",background:"#fff",border:"none",borderRadius:8,padding:"8px 18px",cursor:"pointer",fontFamily:"inherit"}}>Set up Behavior →</button>
       </div>}
-      {ms.length===0&&hb&&<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"100%",opacity:.4}}><Ic name="sparkle" size={32} color="#a0a0a0"/><div style={{fontSize:15,fontWeight:600,marginTop:12}}>Test your AI</div><div style={{fontSize:13,color:"#6e6e6e",marginTop:4}}>Ask a question to see how it responds</div></div>}
+      {ms.length===0&&hb&&<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"100%",opacity:.5}}><Ic name="sparkle" size={32} color="#555"/><div style={{fontSize:15,fontWeight:600,marginTop:12,color:"#fff"}}>Test your AI</div><div style={{fontSize:13,color:"#555",marginTop:4}}>Ask a question to see how it responds</div></div>}
       {ms.map((m,i)=>m.role==="user"
-        ?<div key={i} style={{display:"flex",justifyContent:"flex-end",marginBottom:16}}><div style={{padding:"10px 16px",borderRadius:18,background:"#f0f0ee",fontSize:14}}>{m.text}</div></div>
+        ?<div key={i} style={{display:"flex",justifyContent:"flex-end",marginBottom:16}}><div style={{padding:"10px 16px",borderRadius:18,background:"#2d2d2d",fontSize:14,color:"#fff"}}>{m.text}</div></div>
         :<div key={i} style={{marginBottom:18}}>
           <div style={{display:"flex",gap:10}}>
-            <div style={{width:28,height:28,borderRadius:"50%",background:"#1a1a1a",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Ic name="sparkle" size={14} color="#fff"/></div>
-            <div style={{padding:"10px 16px",borderRadius:"4px 18px 18px 18px",background:"#eef4ff",fontSize:14}}>{m.text}</div>
+            <div style={{width:28,height:28,borderRadius:"50%",background:"#333",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Ic name="sparkle" size={14} color="#fff"/></div>
+            <div style={{padding:"10px 16px",borderRadius:"4px 18px 18px 18px",background:"#1a2840",fontSize:14,color:"#e8f0fe"}}>{m.text}</div>
           </div>
           {m.citation&&<div style={{marginLeft:38,marginTop:8}}>
             <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:5}}>
-              <Ic name={m.citation.ks.type==="link"?"link":"textlines"} size={12} color="#a0a0a0"/>
-              <span style={{fontSize:11,fontWeight:600,color:"#a0a0a0"}}>{m.citation.ks.title}</span>
+              <Ic name={m.citation.ks.type==="link"?"link":"textlines"} size={12} color="#555"/>
+              <span style={{fontSize:11,fontWeight:600,color:"#555"}}>{m.citation.ks.title}</span>
             </div>
             <div style={{display:"flex",flexDirection:"column",gap:4}}>
               {m.citation.highlights.map((h,idx)=>(
-                <button key={idx} onClick={()=>handleCitation(m.citation.ks,h)} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",borderRadius:6,border:"1px solid #e5e5e3",background:"#fff",cursor:"pointer",fontFamily:"inherit",textAlign:"left",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#0078ff";e.currentTarget.style.background="#f0f7ff";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#e5e5e3";e.currentTarget.style.background="#fff";}}>
-                  <span style={{width:18,height:18,borderRadius:"50%",background:"#f0f0ee",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"#6e6e6e",flexShrink:0}}>{idx+1}</span>
-                  <span style={{fontSize:12,color:"#6e6e6e",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1}}>"{h.replace(/\n/g," ").slice(0,60)}{h.length>60?"…":""}"</span>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" style={{flexShrink:0}}><path d="M5 12h14M13 6l6 6-6 6" stroke="#a0a0a0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <button key={idx} onClick={()=>handleCitation(m.citation.ks,h)} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",borderRadius:6,border:"1px solid #2d2d2d",background:"#1a1a1a",cursor:"pointer",fontFamily:"inherit",textAlign:"left",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#4d9fff";e.currentTarget.style.background="#1a2840";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#2d2d2d";e.currentTarget.style.background="#1a1a1a";}}>
+                  <span style={{width:18,height:18,borderRadius:"50%",background:"#222",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"#666",flexShrink:0}}>{idx+1}</span>
+                  <span style={{fontSize:12,color:"#666",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1}}>"{h.replace(/\n/g," ").slice(0,60)}{h.length>60?"…":""}"</span>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" style={{flexShrink:0}}><path d="M5 12h14M13 6l6 6-6 6" stroke="#555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </button>
               ))}
             </div>
           </div>}
         </div>
       )}
-      {typ&&<D3/>}
+      {typ&&<div style={{display:"flex",gap:10,alignItems:"flex-start",animation:"fd .3s ease"}}><div style={{width:32,height:32,borderRadius:"50%",background:"#333",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:2}}><Ic name="sparkle" size={16} color="#fff"/></div><div style={{padding:"12px 16px",borderRadius:"4px 16px 16px 16px",background:"#1a2840"}}><div style={{display:"flex",gap:5}}>{[0,1,2].map(j=><div key={j} style={{width:7,height:7,borderRadius:"50%",background:"#4d9fff",animation:"pls 1.2s ease-in-out "+j*0.2+"s infinite"}}/>)}</div></div></div>}
       <div ref={ce}/>
     </div>
-    <div style={{padding:"0 16px 6px",display:"flex",gap:5,flexWrap:"wrap",flexShrink:0}}>{["How much do cakes cost?","Opening hours?"].map((q,i)=><button key={i} onClick={()=>snd(q)} style={{fontSize:12,padding:"5px 10px",borderRadius:6,border:"1px solid #e5e5e3",background:"#fff",color:"#6e6e6e",cursor:"pointer",fontFamily:"inherit"}}>{q}</button>)}</div>
-    <div style={{padding:"8px 16px 14px",borderTop:"1px solid #e5e5e3",flexShrink:0}}><div style={{display:"flex",gap:8,padding:"8px 8px 8px 14px",borderRadius:10,border:"1px solid #0078ff"}}><input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&snd()} placeholder="Ask me anything" style={{flex:1,border:"none",outline:"none",fontSize:14,background:"transparent",fontFamily:"inherit"}}/><button onClick={()=>snd()} style={{width:32,height:32,borderRadius:8,border:"none",background:inp.trim()?"#1a1a1a":"#f0f0ee",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><Ic name="sparkle" size={16} color={inp.trim()?"#fff":"#a0a0a0"}/></button></div></div>
+    <div style={{padding:"0 16px 6px",display:"flex",gap:5,flexWrap:"wrap",flexShrink:0}}>{["How much do cakes cost?","Opening hours?"].map((q,i)=><button key={i} onClick={()=>snd(q)} style={{fontSize:12,padding:"5px 10px",borderRadius:6,border:"1px solid #2d2d2d",background:"transparent",color:"#666",cursor:"pointer",fontFamily:"inherit"}}>{q}</button>)}</div>
+    <div style={{padding:"8px 16px 14px",borderTop:"1px solid #2d2d2d",flexShrink:0}}><div style={{display:"flex",gap:8,padding:"8px 8px 8px 14px",borderRadius:10,border:"1px solid #0078ff",background:"#0d1929"}}><input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&snd()} placeholder="Ask me anything" className="dark-input" style={{flex:1,border:"none",outline:"none",fontSize:14,background:"transparent",fontFamily:"inherit",color:"#fff"}}/><button onClick={()=>snd()} style={{width:32,height:32,borderRadius:8,border:"none",background:inp.trim()?"#0078ff":"#222",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><Ic name="sparkle" size={16} color={inp.trim()?"#fff":"#555"}/></button></div></div>
   </>;
 
-  const STYLES=`@keyframes fd{from{opacity:0}to{opacity:1}}@keyframes pls{0%,100%{opacity:.3}50%{opacity:.9}}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes slideRight{from{transform:translateX(100%)}to{transform:translateX(0)}}@keyframes hlPulse{0%{background:#fef08a}40%{background:#fbbf24}100%{background:#fef08a}}*{box-sizing:border-box;margin:0;padding:0}`;
+  const STYLES=`@keyframes fd{from{opacity:0}to{opacity:1}}@keyframes pls{0%,100%{opacity:.3}50%{opacity:.9}}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes slideRight{from{transform:translateX(100%)}to{transform:translateX(0)}}@keyframes hlPulse{0%{background:#fef08a}40%{background:#fbbf24}100%{background:#fef08a}}*{box-sizing:border-box;margin:0;padding:0}.dark-input::placeholder{color:#555}`;
 
   // ─── IA VIEW ─────────────────────────────────────────────────────────────────
   if(showIA){
@@ -659,8 +659,8 @@ export default function App(){
       {showPlayground&&(
         <div style={{position:"fixed",inset:0,zIndex:200,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
           <div onClick={()=>setShowPlayground(false)} style={{position:"absolute",inset:0,background:"rgba(0,0,0,.4)"}}/>
-          <div style={{position:"relative",background:"#fff",borderRadius:"20px 20px 0 0",height:"85vh",display:"flex",flexDirection:"column",animation:"slideUp .3s ease"}}>
-            <div style={{width:36,height:4,borderRadius:2,background:"#e5e5e3",margin:"10px auto 0"}}/>
+          <div style={{position:"relative",background:"#111",borderRadius:"20px 20px 0 0",height:"85vh",display:"flex",flexDirection:"column",animation:"slideUp .3s ease"}}>
+            <div style={{width:36,height:4,borderRadius:2,background:"#333",margin:"10px auto 0"}}/>
             {PlaygroundPanel({onClose:()=>setShowPlayground(false)})}
           </div>
         </div>
@@ -739,7 +739,7 @@ export default function App(){
           <div onMouseDown={startResize} style={{width:6,flexShrink:0,cursor:"col-resize",background:dragging?"#d0d0ce":"#e5e5e3",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="#d0d0ce"} onMouseLeave={e=>{if(!dragging)e.currentTarget.style.background="#e5e5e3";}}>
             <div style={{display:"flex",flexDirection:"column",gap:3}}>{[0,1,2].map(i=><div key={i} style={{width:2,height:10,borderRadius:1,background:"#a0a0a0"}}/>)}</div>
           </div>
-          <div style={{width:playgroundWidth||"50%",flexShrink:0,background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
+          <div style={{width:playgroundWidth||"50%",flexShrink:0,background:"#111",display:"flex",flexDirection:"column",overflow:"hidden"}}>
             {PlaygroundPanel({})}
           </div>
         </div>
@@ -796,7 +796,7 @@ export default function App(){
             </div>
           </div>
           {/* AI Playground */}
-          <div style={{width:playgroundWidth||"35%",flexShrink:0,borderLeft:"none",background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
+          <div style={{width:playgroundWidth||"35%",flexShrink:0,borderLeft:"none",background:"#111",display:"flex",flexDirection:"column",overflow:"hidden"}}>
             {PlaygroundPanel({})}
           </div>
         </div>
