@@ -109,7 +109,7 @@ export default function App(){
       if(!splitRef.current) return;
       const delta=startX-ev.clientX;
       const max=splitRef.current.offsetWidth-375-6;
-      setPlaygroundWidth(Math.min(max,Math.max(280,startW+delta)));
+      setPlaygroundWidth(Math.min(max,Math.max(375,startW+delta)));
     };
     const onUp=()=>{
       setDragging(false);
