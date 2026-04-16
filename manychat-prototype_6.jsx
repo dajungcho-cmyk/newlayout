@@ -635,13 +635,14 @@ export default function App(){
         </div>
       </div>
 
-      {/* Breadcrumb */}
-      <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 16px",borderBottom:"1px solid #e5e5e3",background:"#fff",flexShrink:0}}>
-        <button onClick={selectedKS?()=>{setSelectedKS(null);setHighlightTexts([]);}:undefined} style={{display:"flex",alignItems:"center",justifyContent:"center",background:"none",border:selectedKS?"1px solid #e5e5e3":"none",borderRadius:8,padding:selectedKS?"6px 10px":"0",cursor:selectedKS?"pointer":"default",flexShrink:0}}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12l7 7M5 12l7-7" stroke={selectedKS?"#1a1a1a":"#c0c0c0"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </button>
-        <span style={{fontSize:15,fontWeight:600}}>{selectedKS?selectedKS.title:NV.find(n=>n.id===pg)?.l||pg}</span>
-        {NV.find(n=>n.id===pg)?.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{NV.find(n=>n.id===pg).b}</span>}
+      {/* Tab strip */}
+      <div style={{display:"flex",borderBottom:"1px solid #e5e5e3",background:"#fff",flexShrink:0,overflowX:"auto",scrollbarWidth:"none"}}>
+        {NV.map(n=>(
+          <button key={n.id} onClick={()=>{go(n.id);setSelectedKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",gap:5,padding:"10px 14px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
+            {n.l}
+            {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
+          </button>
+        ))}
       </div>
 
       {/* Main content */}
