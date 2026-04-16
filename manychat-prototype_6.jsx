@@ -628,7 +628,6 @@ export default function App(){
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           <button onClick={()=>setShowIA(true)} style={{fontSize:12,fontWeight:600,color:"#6e6e6e",background:"none",border:"1px solid #e5e5e3",borderRadius:8,padding:"5px 8px",cursor:"pointer",fontFamily:"inherit"}}>IA</button>
-          <button onClick={()=>setShowPlayground(true)} style={{fontSize:13,fontWeight:700,color:"#fff",background:"#1a1a1a",border:"none",borderRadius:10,padding:"8px 14px",cursor:"pointer",fontFamily:"inherit"}}>Test AI</button>
           <button onClick={()=>setShowMobileMenu(true)} style={{display:"flex",alignItems:"center",justifyContent:"center",background:"none",border:"none",cursor:"pointer",padding:4}}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <line x1="3" y1="6" x2="21" y2="6" stroke="#1a1a1a" strokeWidth="2" strokeLinecap="round"/>
@@ -652,6 +651,12 @@ export default function App(){
       <div style={{flex:1,overflow:"auto",background:"#f4f4f4"}}>
         {PageContent({mobile:true})}
       </div>
+
+      {/* FAB: Test AI */}
+      <button onClick={()=>setShowPlayground(true)} style={{position:"fixed",bottom:24,right:20,height:46,borderRadius:23,background:"#1a1a1a",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:8,padding:"0 20px",boxShadow:"0 4px 16px rgba(0,0,0,.25)",zIndex:50}}>
+        <Ic name="sparkle" size={16} color="#fff"/>
+        <span style={{fontSize:13,fontWeight:700,color:"#fff",fontFamily:"system-ui,sans-serif"}}>Test AI</span>
+      </button>
 
       {/* Playground overlay */}
       {showPlayground&&(
