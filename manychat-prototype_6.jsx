@@ -239,8 +239,8 @@ export default function App(){
   };
 
   // Shared page content (used in both layouts)
-  const PageContent = ({mobile=false}) => (
-    <div style={{padding: mobile ? "16px 16px 24px" : "28px 32px", maxWidth: mobile ? "none" : 720, margin:"0 auto"}}>
+  const PageContent = ({mobile=false,compact=false}) => (
+    <div style={{padding: mobile ? "16px 16px 24px" : compact ? "20px 20px 24px" : "28px 32px", maxWidth: mobile||compact ? "none" : 720, margin:"0 auto"}}>
       {pg==="overview"&&<div><h1 style={{fontSize: mobile?20:24,fontWeight:700,marginBottom:20}}>Overview</h1><div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:24}}>Performance metrics go here</div></div>}
       {pg==="knowledge"&&<div>
         {selectedKS ? (
@@ -290,7 +290,7 @@ export default function App(){
             <p style={{fontSize:14,color:"#6e6e6e",marginBottom:24}}>Build a solid knowledge base for AI to work from</p>
 
             {/* Add source cards */}
-            <div style={{display:"grid",gridTemplateColumns:mobile?"1fr 1fr":"repeat(4,auto)",gap:12,marginBottom:28}}>
+            <div style={{display:"grid",gridTemplateColumns:(mobile||compact)?"1fr 1fr":"repeat(4,auto)",gap:12,marginBottom:28}}>
               {[
                 {icon:"link",label:"Add link",soon:false},
                 {icon:"textlines",label:"Add text",soon:false},
@@ -315,7 +315,7 @@ export default function App(){
 
             {/* Table */}
             <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",overflow:"hidden"}}>
-              {!mobile&&<div style={{display:"flex",alignItems:"center",padding:"8px 16px",borderBottom:"1px solid #f0f0ee"}}>
+              {!mobile&&!compact&&<div style={{display:"flex",alignItems:"center",padding:"8px 16px",borderBottom:"1px solid #f0f0ee"}}>
                 <span style={{fontSize:12,color:"#a0a0a0",width:40}}>Type</span>
                 <span style={{fontSize:12,color:"#a0a0a0",flex:1}}/>
                 <span style={{fontSize:12,color:"#a0a0a0",width:130,textAlign:"right",display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end"}}>Last updated <Ic name="funnel" size={11} color="#a0a0a0"/></span>
@@ -327,9 +327,9 @@ export default function App(){
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{fontSize:14,fontWeight:500,color:"#1a1a1a"}}>{k.title}</div>
                     {k.url&&<div style={{fontSize:12,color:"#a0a0a0",marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{k.url}</div>}
-                    {mobile&&<div style={{fontSize:12,color:"#a0a0a0",marginTop:2}}>{k.updated}</div>}
+                    {(mobile||compact)&&<div style={{fontSize:12,color:"#a0a0a0",marginTop:2}}>{k.updated}</div>}
                   </div>
-                  {!mobile&&<div style={{width:130,flexShrink:0,textAlign:"right",fontSize:13,color:"#6e6e6e"}}>{k.updated}</div>}
+                  {!mobile&&!compact&&<div style={{width:130,flexShrink:0,textAlign:"right",fontSize:13,color:"#6e6e6e"}}>{k.updated}</div>}
                   <button onClick={e=>e.stopPropagation()} style={{width:32,flexShrink:0,display:"flex",justifyContent:"flex-end",background:"none",border:"none",cursor:"pointer",padding:0}}><Ic name="moredots" size={16} color="#a0a0a0"/></button>
                 </div>
               ))}
@@ -344,14 +344,14 @@ export default function App(){
 
         {fv&&<div style={{maxWidth:560,margin:"0 auto",paddingTop:16}}>
           <AB>{cs===0?<span>{t1}<span style={{opacity:t1.length<GM.length?1:0,animation:"pls 1s infinite"}}>|</span></span>:GM}</AB>
-          {cs===0&&sc1&&<div style={{marginLeft:mobile?0:42,display:"flex",flexDirection:"column",gap:8,animation:"fd .4s ease"}}><CB icon="database" t="Help me answer customer questions faster" d="I will reply to DMs using your knowledge base, 24/7" onClick={()=>act("answer")}/><CB icon="target" t="Find and qualify my best leads" d="Screen people and route the right ones to you" onClick={()=>act("qualify")} delay={0.1}/><CB icon="flag" t="Keep my community engaged" d="Reply to nice comments in your voice" onClick={()=>act("engage")} delay={0.2}/></div>}
+          {cs===0&&sc1&&<div style={{marginLeft:(mobile||compact)?0:42,display:"flex",flexDirection:"column",gap:8,animation:"fd .4s ease"}}><CB icon="database" t="Help me answer customer questions faster" d="I will reply to DMs using your knowledge base, 24/7" onClick={()=>act("answer")}/><CB icon="target" t="Find and qualify my best leads" d="Screen people and route the right ones to you" onClick={()=>act("qualify")} delay={0.1}/><CB icon="flag" t="Keep my community engaged" d="Reply to nice comments in your voice" onClick={()=>act("engage")} delay={0.2}/></div>}
           {cs>=1&&sl&&<div>
             <UB text={GL[sl]}/>
             {sl==="answer"&&<div>{cs===1&&<D3/>}{cs===2&&<AB><div style={{fontWeight:600,marginBottom:10}}>Setting up Answer Questions...</div><div style={{color:"#6e6e6e",fontSize:13}}><LR done={ls>=2} active={ls>=1} text="Connecting to your knowledge base"/><LR done={ls>=3} active={ls>=2} text="Configuring AI responses"/><LR done={false} active={ls>=3} text="Enabling AI Replies"/></div></AB>}{cs===3&&<AB><span style={{display:"flex",alignItems:"center",gap:6}}><CK/><b>All set!</b></span></AB>}</div>}
             {sl==="engage"&&<div>{cs===1&&<D3/>}{cs===2&&<AB><div style={{fontWeight:600,marginBottom:10}}>Setting up Comment Replies...</div><div style={{color:"#6e6e6e",fontSize:13}}><LR done={ls>=2} active={ls>=1} text="Analyzing brand voice"/><LR done={ls>=3} active={ls>=2} text="Comment detection"/><LR done={false} active={ls>=3} text="Enabling AI Replies"/></div></AB>}{cs===3&&<AB><span style={{display:"flex",alignItems:"center",gap:6}}><CK/><b>All set!</b></span></AB>}</div>}
             {sl==="qualify"&&<div>
               {cs===4&&<D3/>}
-              {cs===5&&<div><AB><span>Great choice! {t2}<span style={{opacity:t2.length<FM.length?1:0,animation:"pls 1s infinite"}}>|</span></span></AB>{sc2&&<div style={{marginLeft:mobile?0:42,display:"flex",flexDirection:"column",gap:8,animation:"fd .4s ease"}}><CB icon="link" t="Qualify and book a call" d="Ask questions, offer calendar link" onClick={()=>actTpl("book")}/><CB icon="sparkle" t="Capture leads and send a freebie" d="Collect info for a lead magnet" onClick={()=>actTpl("freebie")} delay={0.1}/><CB icon="target" t="Screen and filter bad fits" d="Identify non-ideal clients early" onClick={()=>actTpl("filter")} delay={0.2}/><CB icon="edit" t="Start from scratch" d="Custom qualification flow" onClick={()=>actTpl("scratch")} delay={0.3}/></div>}</div>}
+              {cs===5&&<div><AB><span>Great choice! {t2}<span style={{opacity:t2.length<FM.length?1:0,animation:"pls 1s infinite"}}>|</span></span></AB>{sc2&&<div style={{marginLeft:(mobile||compact)?0:42,display:"flex",flexDirection:"column",gap:8,animation:"fd .4s ease"}}><CB icon="link" t="Qualify and book a call" d="Ask questions, offer calendar link" onClick={()=>actTpl("book")}/><CB icon="sparkle" t="Capture leads and send a freebie" d="Collect info for a lead magnet" onClick={()=>actTpl("freebie")} delay={0.1}/><CB icon="target" t="Screen and filter bad fits" d="Identify non-ideal clients early" onClick={()=>actTpl("filter")} delay={0.2}/><CB icon="edit" t="Start from scratch" d="Custom qualification flow" onClick={()=>actTpl("scratch")} delay={0.3}/></div>}</div>}
               {cs>=6&&<div><AB><span>Great choice! {FM}</span></AB><UB text={TL[qt]}/></div>}
               {cs===6&&<D3/>}
               {cs===7&&<AB><div style={{fontWeight:600,marginBottom:10}}>Setting up {TL[qt]}...</div><div style={{color:"#6e6e6e",fontSize:13}}><LR done={ls>=2} active={ls>=1} text="Building criteria"/><LR done={ls>=3} active={ls>=2} text="Configuring routing"/><LR done={false} active={ls>=3} text="Enabling AI Replies"/></div></AB>}
@@ -737,7 +737,7 @@ export default function App(){
         </div>
         <div ref={splitRef} style={{display:"flex",flex:1,overflow:"hidden",userSelect:dragging?"none":"auto"}}>
           <div style={{flex:1,overflow:"auto",background:"#f4f4f4"}}>
-            {PageContent({})}
+            {PageContent({compact:true})}
           </div>
           <div onMouseDown={startResize} style={{width:6,flexShrink:0,cursor:"col-resize",background:dragging?"#d0d0ce":"#e5e5e3",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="#d0d0ce"} onMouseLeave={e=>{if(!dragging)e.currentTarget.style.background="#e5e5e3";}}>
             <div style={{display:"flex",flexDirection:"column",gap:3}}>{[0,1,2].map(i=><div key={i} style={{width:2,height:10,borderRadius:1,background:"#a0a0a0"}}/>)}</div>
