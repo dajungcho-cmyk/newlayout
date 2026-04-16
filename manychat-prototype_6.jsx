@@ -774,31 +774,31 @@ export default function App(){
         <GlobalSidebarItem icon="settings" active={globalTab==="settings"} onClick={()=>setGlobalTab("settings")}/>
         <GlobalSidebarItem icon="help" active={globalTab==="help"} onClick={()=>setGlobalTab("help")}/>
       </div>
-      {/* Tab strip + split */}
-      <div style={{display:"flex",flexDirection:"column",flex:1,overflow:"hidden"}}>
-        <div style={{display:"flex",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0}}>
-          {NV.map(n=>(
-            <button key={n.id} onClick={()=>go(n.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"10px 16px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
-              <Ic name={n.i} size={15} color={pg===n.id?"#1a1a1a":"#a0a0a0"}/>{n.l}
-              {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
-            </button>
-          ))}
-        </div>
-        {/* Content + resizable playground */}
-        <div ref={splitRef} style={{display:"flex",flex:1,overflow:"hidden",userSelect:dragging?"none":"auto"}}>
+      {/* Split: config column + handle + playground */}
+      <div ref={splitRef} style={{display:"flex",flex:1,overflow:"hidden",userSelect:dragging?"none":"auto"}}>
+        {/* Config column: tabs + content */}
+        <div style={{flex:1,overflow:"hidden",display:"flex",flexDirection:"column"}}>
+          <div style={{display:"flex",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0}}>
+            {NV.map(n=>(
+              <button key={n.id} onClick={()=>go(n.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"10px 16px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
+                <Ic name={n.i} size={15} color={pg===n.id?"#1a1a1a":"#a0a0a0"}/>{n.l}
+                {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
+              </button>
+            ))}
+          </div>
           <div style={{flex:1,overflow:"auto",background:"#f4f4f4"}}>
             {PageContent({})}
           </div>
-          {/* Drag handle */}
-          <div onMouseDown={startResize} style={{width:6,flexShrink:0,cursor:"col-resize",background:dragging?"#d0d0ce":"#e5e5e3",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="#d0d0ce"} onMouseLeave={e=>{if(!dragging)e.currentTarget.style.background="#e5e5e3";}}>
-            <div style={{display:"flex",flexDirection:"column",gap:3}}>
-              {[0,1,2].map(i=><div key={i} style={{width:2,height:10,borderRadius:1,background:"#a0a0a0"}}/>)}
-            </div>
+        </div>
+        {/* Drag handle */}
+        <div onMouseDown={startResize} style={{width:6,flexShrink:0,cursor:"col-resize",background:dragging?"#d0d0ce":"#e5e5e3",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="#d0d0ce"} onMouseLeave={e=>{if(!dragging)e.currentTarget.style.background="#e5e5e3";}}>
+          <div style={{display:"flex",flexDirection:"column",gap:3}}>
+            {[0,1,2].map(i=><div key={i} style={{width:2,height:10,borderRadius:1,background:"#a0a0a0"}}/>)}
           </div>
-          {/* AI Playground */}
-          <div style={{width:playgroundWidth||"35%",flexShrink:0,borderLeft:"none",background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
-            {PlaygroundPanel({})}
-          </div>
+        </div>
+        {/* AI Playground */}
+        <div style={{width:playgroundWidth||"35%",flexShrink:0,borderLeft:"none",background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
+          {PlaygroundPanel({})}
         </div>
       </div>
     </div>
