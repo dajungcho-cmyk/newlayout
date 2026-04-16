@@ -89,6 +89,8 @@ export default function App(){
   const[sc1,setSc1]=useState(false);const[sc2,setSc2]=useState(false);const[ls,setLs]=useState(0);
   const[globalTab,setGlobalTab]=useState("ai");
   const[showPlayground,setShowPlayground]=useState(false);
+  const[closingPlayground,setClosingPlayground]=useState(false);
+  const[fabFlash,setFabFlash]=useState(false);
   const[selectedKS,setSelectedKS]=useState(null);
   const[highlightTexts,setHighlightTexts]=useState([]);
   const[playgroundWidth,setPlaygroundWidth]=useState(null);
@@ -158,11 +160,16 @@ export default function App(){
   };
   const snd=(t)=>{const q=t||inp.trim();if(!q)return;setInp("");setMs(p=>[...p,{role:"user",text:q}]);setTyp(true);setTimeout(()=>{setMs(p=>[...p,resp(q)]);setTyp(false);},1100);};
 
+  const closePlayground=()=>{
+    setClosingPlayground(true);
+    setTimeout(()=>{setShowPlayground(false);setClosingPlayground(false);setFabFlash(true);setTimeout(()=>setFabFlash(false),700);},300);
+  };
+
   const handleCitation=(ks,singleHighlight)=>{
     setSelectedKS(ks);
     setHighlightTexts([singleHighlight]);
     setPg("knowledge");
-    if(isMobile) setShowPlayground(false);
+    if(isMobile) closePlayground();
   };
 
   useEffect(()=>{
@@ -421,7 +428,7 @@ export default function App(){
     <div style={{padding:"8px 16px 14px",borderTop:"1px solid #e5e5e3",flexShrink:0}}><div style={{display:"flex",gap:8,padding:"8px 8px 8px 14px",borderRadius:10,border:"1px solid #0078ff"}}><input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&snd()} placeholder="Ask me anything" style={{flex:1,border:"none",outline:"none",fontSize:14,background:"transparent",fontFamily:"inherit"}}/><button onClick={()=>snd()} style={{width:32,height:32,borderRadius:8,border:"none",background:inp.trim()?"#1a1a1a":"#f0f0ee",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><Ic name="sparkle" size={16} color={inp.trim()?"#fff":"#a0a0a0"}/></button></div></div>
   </>;
 
-  const STYLES=`@keyframes fd{from{opacity:0}to{opacity:1}}@keyframes pls{0%,100%{opacity:.3}50%{opacity:.9}}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes slideRight{from{transform:translateX(100%)}to{transform:translateX(0)}}@keyframes hlPulse{0%{background:#fef08a}40%{background:#fbbf24}100%{background:#fef08a}}*{box-sizing:border-box;margin:0;padding:0}`;
+  const STYLES=`@keyframes fd{from{opacity:0}to{opacity:1}}@keyframes pls{0%,100%{opacity:.3}50%{opacity:.9}}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes slideDown{from{transform:translateY(0)}to{transform:translateY(100%)}}@keyframes slideRight{from{transform:translateX(100%)}to{transform:translateX(0)}}@keyframes hlPulse{0%{background:#fef08a}40%{background:#fbbf24}100%{background:#fef08a}}@keyframes fabPulse{0%{transform:scale(1);box-shadow:0 4px 16px rgba(0,0,0,.25)}40%{transform:scale(1.12);box-shadow:0 6px 24px rgba(0,0,0,.4)}100%{transform:scale(1);box-shadow:0 4px 16px rgba(0,0,0,.25)}}*{box-sizing:border-box;margin:0;padding:0}`;
 
   // ─── IA VIEW ─────────────────────────────────────────────────────────────────
   if(showIA){
@@ -651,7 +658,7 @@ export default function App(){
       </div>
 
       {/* FAB: Test AI */}
-      <button onClick={()=>setShowPlayground(true)} style={{position:"fixed",bottom:24,right:20,height:46,borderRadius:23,background:"#1a1a1a",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:8,padding:"0 20px",boxShadow:"0 4px 16px rgba(0,0,0,.25)",zIndex:50}}>
+      <button onClick={()=>setShowPlayground(true)} style={{position:"fixed",bottom:24,right:20,height:46,borderRadius:23,background:"#1a1a1a",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:8,padding:"0 20px",boxShadow:"0 4px 16px rgba(0,0,0,.25)",zIndex:50,animation:fabFlash?"fabPulse .6s ease":"none"}}>
         <Ic name="sparkle" size={16} color="#fff"/>
         <span style={{fontSize:13,fontWeight:700,color:"#fff",fontFamily:"system-ui,sans-serif"}}>Test AI</span>
       </button>
@@ -659,10 +666,10 @@ export default function App(){
       {/* Playground overlay */}
       {showPlayground&&(
         <div style={{position:"fixed",inset:0,zIndex:200,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
-          <div onClick={()=>setShowPlayground(false)} style={{position:"absolute",inset:0,background:"rgba(0,0,0,.4)"}}/>
-          <div style={{position:"relative",background:"#fff",borderRadius:"20px 20px 0 0",height:"85vh",display:"flex",flexDirection:"column",animation:"slideUp .3s ease"}}>
+          <div onClick={closePlayground} style={{position:"absolute",inset:0,background:"rgba(0,0,0,.4)"}}/>
+          <div style={{position:"relative",background:"#fff",borderRadius:"20px 20px 0 0",height:"85vh",display:"flex",flexDirection:"column",animation:closingPlayground?"slideDown .3s ease-in forwards":"slideUp .3s ease"}}>
             <div style={{width:36,height:4,borderRadius:2,background:"#e5e5e3",margin:"10px auto 0"}}/>
-            {PlaygroundPanel({onClose:()=>setShowPlayground(false)})}
+            {PlaygroundPanel({onClose:closePlayground})}
           </div>
         </div>
       )}
