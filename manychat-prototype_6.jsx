@@ -169,7 +169,7 @@ export default function App(){
     setSelectedKS(ks);
     setHighlightTexts([singleHighlight]);
     setPg("knowledge");
-    if(isMobile) closePlayground();
+    if(isMobile||isCompact) closePlayground();
   };
 
   useEffect(()=>{
@@ -709,6 +709,7 @@ export default function App(){
   if(isCompact) return(
   <div style={{width:"100%",height:"100vh",display:"flex",flexDirection:"column",background:"#f4f4f4",fontFamily:"system-ui,sans-serif",overflow:"hidden",fontSize:14,color:"#1a1a1a"}}>
     <style>{STYLES}</style>
+    {/* Header */}
     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 20px",height:52,borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0,paddingLeft:68}}>
       <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:18,fontWeight:700}}>Manychat AI</span><span style={{fontSize:13,color:"#a0a0a0"}}>BETA for Instagram</span></div>
       <div style={{display:"flex",gap:8,alignItems:"center"}}>
@@ -730,29 +731,38 @@ export default function App(){
         <GlobalSidebarItem icon="settings" active={globalTab==="settings"} onClick={()=>setGlobalTab("settings")}/>
         <GlobalSidebarItem icon="help" active={globalTab==="help"} onClick={()=>setGlobalTab("help")}/>
       </div>
-      {/* Right side: tab strip + split */}
+      {/* Right side: tabs + full-width content */}
       <div style={{display:"flex",flexDirection:"column",flex:1,overflow:"hidden"}}>
         <div style={{display:"flex",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0,overflowX:"auto",scrollbarWidth:"none"}}>
           {NV.map(n=>(
-            <button key={n.id} onClick={()=>go(n.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"10px 14px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
+            <button key={n.id} onClick={()=>{go(n.id);setSelectedKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",gap:6,padding:"10px 14px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
               <Ic name={n.i} size={15} color={pg===n.id?"#1a1a1a":"#a0a0a0"}/>{n.l}
               {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
             </button>
           ))}
         </div>
-        <div ref={splitRef} style={{display:"flex",flex:1,overflow:"hidden",userSelect:dragging?"none":"auto"}}>
-          <div style={{flex:1,overflow:"auto",background:"#f4f4f4"}}>
-            {PageContent({compact:true})}
-          </div>
-          <div onMouseDown={startResize} style={{width:6,flexShrink:0,cursor:"col-resize",background:dragging?"#d0d0ce":"#e5e5e3",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .15s"}} onMouseEnter={e=>e.currentTarget.style.background="#d0d0ce"} onMouseLeave={e=>{if(!dragging)e.currentTarget.style.background="#e5e5e3";}}>
-            <div style={{display:"flex",flexDirection:"column",gap:3}}>{[0,1,2].map(i=><div key={i} style={{width:2,height:10,borderRadius:1,background:"#a0a0a0"}}/>)}</div>
-          </div>
-          <div style={{width:playgroundWidth||"50%",flexShrink:0,background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
-            {PlaygroundPanel({})}
-          </div>
+        <div style={{flex:1,overflow:"auto",background:"#f4f4f4"}}>
+          {PageContent({compact:true})}
         </div>
       </div>
     </div>
+
+    {/* FAB: Test AI */}
+    <button onClick={()=>setShowPlayground(true)} style={{position:"fixed",bottom:24,right:24,height:46,borderRadius:23,background:"#1a1a1a",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:8,padding:"0 20px",boxShadow:"0 4px 16px rgba(0,0,0,.25)",zIndex:50,animation:fabFlash?"fabPulse .6s ease":"none"}}>
+      <Ic name="sparkle" size={16} color="#fff"/>
+      <span style={{fontSize:13,fontWeight:700,color:"#fff",fontFamily:"system-ui,sans-serif"}}>Test AI</span>
+    </button>
+
+    {/* Playground overlay */}
+    {showPlayground&&(
+      <div style={{position:"fixed",inset:0,zIndex:200,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+        <div onClick={closePlayground} style={{position:"absolute",inset:0,background:"rgba(0,0,0,.4)"}}/>
+        <div style={{position:"relative",background:"#fff",borderRadius:"20px 20px 0 0",height:"90vh",display:"flex",flexDirection:"column",animation:closingPlayground?"slideDown .3s ease-in forwards":"slideUp .3s ease"}}>
+          <div style={{width:36,height:4,borderRadius:2,background:"#e5e5e3",margin:"10px auto 0"}}/>
+          {PlaygroundPanel({onClose:closePlayground})}
+        </div>
+      </div>
+    )}
   </div>);
 
   // ─── DESKTOP LAYOUT ──────────────────────────────────────────────────────────
