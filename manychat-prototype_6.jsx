@@ -667,7 +667,7 @@ export default function App(){
       {showPlayground&&(
         <div style={{position:"fixed",inset:0,zIndex:200,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
           <div onClick={closePlayground} style={{position:"absolute",inset:0,background:"rgba(0,0,0,.4)"}}/>
-          <div style={{position:"relative",background:"#fff",borderRadius:"20px 20px 0 0",height:"85vh",display:"flex",flexDirection:"column",animation:closingPlayground?"slideDown .3s ease-in forwards":"slideUp .3s ease"}}>
+          <div style={{position:"relative",background:"#fff",borderRadius:"20px 20px 0 0",height:"90vh",display:"flex",flexDirection:"column",animation:closingPlayground?"slideDown .3s ease-in forwards":"slideUp .3s ease"}}>
             <div style={{width:36,height:4,borderRadius:2,background:"#e5e5e3",margin:"10px auto 0"}}/>
             {PlaygroundPanel({onClose:closePlayground})}
           </div>
