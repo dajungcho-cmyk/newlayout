@@ -103,12 +103,12 @@ export default function App(){
   const startResize=(e)=>{
     e.preventDefault();
     const startX=e.clientX;
-    const startW=playgroundWidth||(splitRef.current?splitRef.current.offsetWidth*0.35:360);
+    const startW=playgroundWidth||(splitRef.current?splitRef.current.offsetWidth*0.40:400);
     setDragging(true);
     const onMove=(ev)=>{
       if(!splitRef.current) return;
       const delta=startX-ev.clientX;
-      const max=splitRef.current.offsetWidth*0.75;
+      const max=splitRef.current.offsetWidth-375-6;
       setPlaygroundWidth(Math.min(max,Math.max(280,startW+delta)));
     };
     const onUp=()=>{
@@ -805,7 +805,7 @@ export default function App(){
           </div>
         </div>
         {/* AI Playground */}
-        <div style={{width:playgroundWidth||"35%",flexShrink:0,borderLeft:"none",background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
+        <div style={{width:playgroundWidth||"40%",flexShrink:0,borderLeft:"none",background:"#fff",display:"flex",flexDirection:"column",overflow:"hidden"}}>
           {PlaygroundPanel({})}
         </div>
       </div>
