@@ -93,6 +93,8 @@ export default function App(){
   const[fabFlash,setFabFlash]=useState(false);
   const[selectedKS,setSelectedKS]=useState(null);
   const[highlightTexts,setHighlightTexts]=useState([]);
+  const[editingKS,setEditingKS]=useState(null);
+  const[editDraft,setEditDraft]=useState({title:"",url:"",content:"",type:"text"});
   const[playgroundWidth,setPlaygroundWidth]=useState(null);
   const[dragging,setDragging]=useState(false);
   const[showIA,setShowIA]=useState(false);
@@ -149,7 +151,7 @@ export default function App(){
     }
   };
   const actTpl=(tid)=>{setCs(6);setQt(tid);setTimeout(()=>setCs(7),800);doLoad(()=>{setCs(8);setTimeout(()=>{setSk(p=>({...p,qualify:true}));setFv(false);setSl(null);setCs(0);},800);});};
-  const go=(p)=>setPg(p);
+  const go=(p)=>{setPg(p);setEditingKS(null);};
   const resp=(q)=>{
     const l=q.toLowerCase();
     if(l.includes("price")||l.includes("cost")||l.includes("much"))
@@ -250,98 +252,155 @@ export default function App(){
     <div style={{padding: mobile ? "16px 16px 24px" : compact ? "20px 20px 24px" : "28px 32px", maxWidth: mobile||compact ? "none" : 720, margin:"0 auto"}}>
       {pg==="overview"&&<div><div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:24}}>Performance metrics go here</div></div>}
       {pg==="knowledge"&&<div>
-        {selectedKS ? (
-          /* ── Detail view ── */
-          <div>
-            {/* Header */}
-            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
-              <button onClick={()=>{setSelectedKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",gap:4,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,color:"#6e6e6e",padding:"4px 0",flexShrink:0}} onMouseEnter={e=>e.currentTarget.style.color="#1a1a1a"} onMouseLeave={e=>e.currentTarget.style.color="#6e6e6e"}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12l7 7M5 12l7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              </button>
-              <h1 style={{fontSize:mobile?18:20,fontWeight:700,flex:1}}>{selectedKS.title}</h1>
-              <button style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"1px solid #e5e5e3",borderRadius:8,padding:"6px 14px",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:500,color:"#1a1a1a"}}>
-                <Ic name="edit" size={13} color="#1a1a1a"/>Edit
-              </button>
-            </div>
 
-            {/* Metadata */}
-            <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"16px 20px",marginBottom:20,display:"flex",flexDirection:"column",gap:10}}>
-              {selectedKS.type==="link"&&(
-                <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
-                  <Ic name="link" size={15} color="#a0a0a0"/>
-                  <div>
-                    <div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:2}}>Sourced URL</div>
-                    <div style={{fontSize:13,color:"#0078ff",wordBreak:"break-all"}}>{selectedKS.url}</div>
+        {/* ── helpers shared across edit forms ── */}
+        {(()=>{
+          const EditTypeToggle=()=><div style={{display:"flex",gap:8}}>{[{id:"link",label:"Website URL",icon:"link"},{id:"text",label:"Plain text",icon:"textlines"}].map(t=><button key={t.id} onClick={()=>setEditDraft(p=>({...p,type:t.id}))} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",borderRadius:8,border:editDraft.type===t.id?"1.5px solid #1a1a1a":"1px solid #e5e5e3",background:editDraft.type===t.id?"#f4f4f4":"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:editDraft.type===t.id?600:400}}><Ic name={t.icon} size={14} color={editDraft.type===t.id?"#1a1a1a":"#6e6e6e"}/>{t.label}</button>)}</div>;
+          const fieldCard=(children,mb=10)=><div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"18px 20px",marginBottom:mb}}>{children}</div>;
+          const fieldLabel=(txt)=><div style={{fontSize:12,fontWeight:600,color:"#6e6e6e",textTransform:"uppercase",letterSpacing:.3,marginBottom:8}}>{txt}</div>;
+          const fieldInput=(val,onChange,ph)=><input value={val} onChange={onChange} placeholder={ph||""} style={{width:"100%",padding:"9px 12px",borderRadius:8,border:"1px solid #e5e5e3",fontSize:14,fontFamily:"inherit",outline:"none",background:"#fafafa"}}/>;
+
+          const EditFormFields=()=><>{fieldCard(<>{fieldLabel("Name")}{fieldInput(editDraft.title,e=>setEditDraft(p=>({...p,title:e.target.value})))}</>)}{fieldCard(<>{fieldLabel("Type")}<EditTypeToggle/></>)}{editDraft.type==="link"&&fieldCard(<>{fieldLabel("URL")}{fieldInput(editDraft.url,e=>setEditDraft(p=>({...p,url:e.target.value})),"https://")}<div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:10}}><span style={{fontSize:12,color:"#6e6e6e"}}>Last synced: {editingKS&&editingKS.updated}</span><button style={{fontSize:12,color:"#0078ff",fontWeight:500,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",padding:0}}>Re-sync now →</button></div></>)}{fieldCard(<>{fieldLabel("Content")}<textarea value={editDraft.content} onChange={e=>setEditDraft(p=>({...p,content:e.target.value}))} style={{width:"100%",minHeight:mobile?160:200,padding:"9px 12px",borderRadius:8,border:"1px solid #e5e5e3",fontSize:14,fontFamily:"inherit",lineHeight:1.7,resize:"vertical",outline:"none",background:"#fafafa"}}/>{editDraft.type==="link"&&<div style={{marginTop:8,padding:"8px 12px",borderRadius:8,background:"#fffbeb",border:"1px solid #fde68a",fontSize:12,color:"#92400e"}}>Content is auto-fetched from the URL. Editing will override the synced version.</div>}</>,mobile?80:24)}</>;
+
+          const openEdit=(ks)=>{setEditingKS(ks);setEditDraft({title:ks.title,url:ks.url||"",content:ks.content,type:ks.type});};
+
+          /* ── DESKTOP: split list + detail/edit ── */
+          if(!mobile&&!compact&&selectedKS) return(
+            <div style={{display:"flex",gap:20,alignItems:"flex-start"}}>
+              {/* Left: source list */}
+              <div style={{width:220,flexShrink:0,background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",overflow:"hidden",position:"sticky",top:0}}>
+                <div style={{padding:"10px 14px",borderBottom:"1px solid #e5e5e3",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:11,fontWeight:700,color:"#a0a0a0",textTransform:"uppercase",letterSpacing:.5}}>Sources</span>
+                  <span style={{fontSize:11,color:"#a0a0a0"}}>{KS.length}</span>
+                </div>
+                {KS.map((k,i)=>(
+                  <div key={i} onClick={()=>{setSelectedKS(k);setEditingKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",borderBottom:i<KS.length-1?"1px solid #f0f0ee":"none",cursor:"pointer",background:selectedKS===k?"#eef4ff":"transparent",transition:"background .1s"}} onMouseEnter={e=>{if(selectedKS!==k)e.currentTarget.style.background="#fafafa";}} onMouseLeave={e=>{e.currentTarget.style.background=selectedKS===k?"#eef4ff":"transparent";}}>
+                    <Ic name={k.type==="link"?"link":"textlines"} size={14} color={selectedKS===k?"#0078ff":"#6e6e6e"}/>
+                    <span style={{fontSize:13,fontWeight:selectedKS===k?600:400,color:selectedKS===k?"#0078ff":"#1a1a1a",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1}}>{k.title}</span>
                   </div>
-                </div>
-              )}
-              <div style={{display:"flex",alignItems:"center",gap:12}}>
-                <Ic name="chart" size={15} color="#a0a0a0"/>
-                <div>
-                  <div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:2}}>Last updated</div>
-                  <div style={{fontSize:13,color:"#1a1a1a"}}>{selectedKS.updated}</div>
-                </div>
+                ))}
+              </div>
+
+              {/* Right: edit or detail */}
+              <div style={{flex:1,minWidth:0}}>
+                {editingKS ? (
+                  /* Desktop edit form */
+                  <div>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+                      <h2 style={{fontSize:17,fontWeight:700}}>Edit source</h2>
+                      <div style={{display:"flex",gap:8}}>
+                        <button onClick={()=>setEditingKS(null)} style={{padding:"8px 18px",borderRadius:8,border:"1px solid #e5e5e3",background:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:500}}>Cancel</button>
+                        <button onClick={()=>setEditingKS(null)} style={{padding:"8px 18px",borderRadius:8,border:"none",background:"#1a1a1a",color:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:600}}>Save changes</button>
+                      </div>
+                    </div>
+                    <EditFormFields/>
+                  </div>
+                ) : (
+                  /* Desktop detail panel (no back btn — list always visible) */
+                  <div>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+                      <h2 style={{fontSize:17,fontWeight:700}}>{selectedKS.title}</h2>
+                      <button onClick={()=>openEdit(selectedKS)} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"1px solid #e5e5e3",borderRadius:8,padding:"6px 14px",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:500,color:"#1a1a1a"}} onMouseEnter={e=>e.currentTarget.style.background="#f4f4f4"} onMouseLeave={e=>e.currentTarget.style.background="none"}>
+                        <Ic name="edit" size={13} color="#1a1a1a"/>Edit
+                      </button>
+                    </div>
+                    <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"16px 20px",marginBottom:16,display:"flex",flexDirection:"column",gap:10}}>
+                      {selectedKS.type==="link"&&<div style={{display:"flex",alignItems:"flex-start",gap:12}}><Ic name="link" size={15} color="#a0a0a0"/><div><div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:2}}>Sourced URL</div><div style={{fontSize:13,color:"#0078ff",wordBreak:"break-all"}}>{selectedKS.url}</div></div></div>}
+                      <div style={{display:"flex",alignItems:"center",gap:12}}><Ic name="chart" size={15} color="#a0a0a0"/><div><div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:2}}>Last updated</div><div style={{fontSize:13}}>{selectedKS.updated}</div></div></div>
+                    </div>
+                    <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"20px 24px"}}>
+                      <div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:14}}>Content</div>
+                      <div style={{fontSize:14,lineHeight:1.7}}><Highlighted key={highlightTexts.join("|")} text={selectedKS.content} highlights={highlightTexts}/></div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
+          );
 
-            {/* Content */}
-            <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"20px 24px"}}>
-              <div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:14}}>Content</div>
-              <div style={{fontSize:14,lineHeight:1.7,color:"#1a1a1a"}}><Highlighted key={highlightTexts.join("|")} text={selectedKS.content} highlights={highlightTexts}/></div>
-            </div>
-          </div>
-        ) : (
-          /* ── List view ── */
-          <div>
-            <p style={{fontSize:14,color:"#6e6e6e",marginBottom:20}}>Build a solid knowledge base for AI to work from</p>
+          /* ── MOBILE/COMPACT: drill-down ── */
 
-            {/* Add source cards */}
-            <div style={{display:"grid",gridTemplateColumns:(mobile||compact)?"1fr 1fr":"repeat(4,1fr)",gap:12,marginBottom:28}}>
-              {[
-                {icon:"link",label:"Add link",soon:false},
-                {icon:"textlines",label:"Add text",soon:false},
-                {icon:"file",label:"Upload file",soon:true},
-                {icon:"instagram",label:"Add post caption",soon:true},
-              ].map(s=>(
-                <button key={s.label} style={{position:"relative",display:"flex",flexDirection:"column",gap:10,padding:"16px",borderRadius:10,border:"1px solid #e5e5e3",background:"#fff",cursor:s.soon?"default":"pointer",fontFamily:"inherit",textAlign:"left",opacity:s.soon?0.7:1}} onMouseEnter={e=>{if(!s.soon)e.currentTarget.style.borderColor="#c0c0c0";}} onMouseLeave={e=>e.currentTarget.style.borderColor="#e5e5e3"}>
-                  {s.soon&&<span style={{position:"absolute",top:10,right:10,fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:4,background:"#6e6e6e",color:"#fff",letterSpacing:.5}}>SOON</span>}
-                  <Ic name={s.icon} size={18} color="#6e6e6e"/>
-                  <span style={{fontSize:14,fontWeight:500,color:"#1a1a1a"}}>{s.label}</span>
+          if(editingKS) return(
+            /* Edit form */
+            <div>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
+                <button onClick={()=>setEditingKS(null)} style={{display:"flex",alignItems:"center",gap:4,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,color:"#6e6e6e",padding:"4px 0",flexShrink:0}} onMouseEnter={e=>e.currentTarget.style.color="#1a1a1a"} onMouseLeave={e=>e.currentTarget.style.color="#6e6e6e"}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12l7 7M5 12l7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </button>
-              ))}
+                <span style={{fontSize:mobile?17:18,fontWeight:700,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>Edit source</span>
+              </div>
+              <EditFormFields/>
+              {/* Sticky save bar (mobile) / inline (compact) */}
+              <div style={mobile?{position:"sticky",bottom:0,background:"#fff",borderTop:"1px solid #e5e5e3",padding:"10px 16px",display:"flex",gap:8,justifyContent:"flex-end",marginLeft:-16,marginRight:-16}:{display:"flex",gap:8,justifyContent:"flex-end"}}>
+                <button onClick={()=>setEditingKS(null)} style={{padding:"9px 20px",borderRadius:8,border:"1px solid #e5e5e3",background:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:500}}>Cancel</button>
+                <button onClick={()=>setEditingKS(null)} style={{padding:"9px 20px",borderRadius:8,border:"none",background:"#1a1a1a",color:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:600}}>Save changes</button>
+              </div>
             </div>
+          );
 
-            {/* Filter + count */}
-            <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
-              <button style={{display:"flex",alignItems:"center",gap:6,padding:"6px 12px",borderRadius:8,border:"1px solid #e5e5e3",background:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:13,color:"#1a1a1a"}}>
-                <Ic name="funnel" size={14} color="#1a1a1a"/>Filter
-              </button>
+          if(selectedKS) return(
+            /* Detail view */
+            <div>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
+                <button onClick={()=>{setSelectedKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",gap:4,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,color:"#6e6e6e",padding:"4px 0",flexShrink:0}} onMouseEnter={e=>e.currentTarget.style.color="#1a1a1a"} onMouseLeave={e=>e.currentTarget.style.color="#6e6e6e"}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12l7 7M5 12l7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </button>
+                <h1 style={{fontSize:mobile?18:20,fontWeight:700,flex:1}}>{selectedKS.title}</h1>
+                <button onClick={()=>openEdit(selectedKS)} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"1px solid #e5e5e3",borderRadius:8,padding:"6px 14px",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:500,color:"#1a1a1a"}}>
+                  <Ic name="edit" size={13} color="#1a1a1a"/>Edit
+                </button>
+              </div>
+              <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"16px 20px",marginBottom:20,display:"flex",flexDirection:"column",gap:10}}>
+                {selectedKS.type==="link"&&<div style={{display:"flex",alignItems:"flex-start",gap:12}}><Ic name="link" size={15} color="#a0a0a0"/><div><div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:2}}>Sourced URL</div><div style={{fontSize:13,color:"#0078ff",wordBreak:"break-all"}}>{selectedKS.url}</div></div></div>}
+                <div style={{display:"flex",alignItems:"center",gap:12}}><Ic name="chart" size={15} color="#a0a0a0"/><div><div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:2}}>Last updated</div><div style={{fontSize:13}}>{selectedKS.updated}</div></div></div>
+              </div>
+              <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"20px 24px"}}>
+                <div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:14}}>Content</div>
+                <div style={{fontSize:14,lineHeight:1.7}}><Highlighted key={highlightTexts.join("|")} text={selectedKS.content} highlights={highlightTexts}/></div>
+              </div>
             </div>
-            <p style={{fontSize:13,color:"#6e6e6e",marginBottom:8}}><b style={{color:"#1a1a1a"}}>{KS.length}</b> sources</p>
+          );
 
-            {/* Table */}
-            <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",overflow:"hidden"}}>
-              {!mobile&&!compact&&<div style={{display:"flex",alignItems:"center",padding:"8px 16px",borderBottom:"1px solid #f0f0ee"}}>
-                <span style={{fontSize:12,color:"#a0a0a0",width:40}}>Type</span>
-                <span style={{fontSize:12,color:"#a0a0a0",flex:1}}/>
-                <span style={{fontSize:12,color:"#a0a0a0",width:130,textAlign:"right",display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end"}}>Last updated <Ic name="funnel" size={11} color="#a0a0a0"/></span>
-                <span style={{width:36}}/>
-              </div>}
-              {KS.map((k,i)=>(
-                <div key={i} onClick={()=>setSelectedKS(k)} style={{display:"flex",alignItems:"center",padding:mobile?"12px 14px":"14px 16px",borderBottom:i<KS.length-1?"1px solid #f0f0ee":"none",cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.background="#fafafa"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                  <div style={{width:36,flexShrink:0}}><Ic name={k.type==="link"?"link":"textlines"} size={16} color="#6e6e6e"/></div>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:14,fontWeight:500,color:"#1a1a1a"}}>{k.title}</div>
-                    {k.url&&<div style={{fontSize:12,color:"#a0a0a0",marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{k.url}</div>}
-                    {(mobile||compact)&&<div style={{fontSize:12,color:"#a0a0a0",marginTop:2}}>{k.updated}</div>}
+          /* List view */
+          return(
+            <div>
+              <p style={{fontSize:14,color:"#6e6e6e",marginBottom:20}}>Build a solid knowledge base for AI to work from</p>
+              <div style={{display:"grid",gridTemplateColumns:(mobile||compact)?"1fr 1fr":"repeat(4,1fr)",gap:12,marginBottom:28}}>
+                {[{icon:"link",label:"Add link",soon:false},{icon:"textlines",label:"Add text",soon:false},{icon:"file",label:"Upload file",soon:true},{icon:"instagram",label:"Add post caption",soon:true}].map(s=>(
+                  <button key={s.label} style={{position:"relative",display:"flex",flexDirection:"column",gap:10,padding:"16px",borderRadius:10,border:"1px solid #e5e5e3",background:"#fff",cursor:s.soon?"default":"pointer",fontFamily:"inherit",textAlign:"left",opacity:s.soon?0.7:1}} onMouseEnter={e=>{if(!s.soon)e.currentTarget.style.borderColor="#c0c0c0";}} onMouseLeave={e=>e.currentTarget.style.borderColor="#e5e5e3"}>
+                    {s.soon&&<span style={{position:"absolute",top:10,right:10,fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:4,background:"#6e6e6e",color:"#fff",letterSpacing:.5}}>SOON</span>}
+                    <Ic name={s.icon} size={18} color="#6e6e6e"/>
+                    <span style={{fontSize:14,fontWeight:500,color:"#1a1a1a"}}>{s.label}</span>
+                  </button>
+                ))}
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+                <button style={{display:"flex",alignItems:"center",gap:6,padding:"6px 12px",borderRadius:8,border:"1px solid #e5e5e3",background:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:13,color:"#1a1a1a"}}><Ic name="funnel" size={14} color="#1a1a1a"/>Filter</button>
+              </div>
+              <p style={{fontSize:13,color:"#6e6e6e",marginBottom:8}}><b style={{color:"#1a1a1a"}}>{KS.length}</b> sources</p>
+              <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",overflow:"hidden"}}>
+                {!mobile&&!compact&&<div style={{display:"flex",alignItems:"center",padding:"8px 16px",borderBottom:"1px solid #f0f0ee"}}>
+                  <span style={{fontSize:12,color:"#a0a0a0",width:40}}>Type</span>
+                  <span style={{fontSize:12,color:"#a0a0a0",flex:1}}/>
+                  <span style={{fontSize:12,color:"#a0a0a0",width:130,textAlign:"right",display:"flex",alignItems:"center",gap:4,justifyContent:"flex-end"}}>Last updated <Ic name="funnel" size={11} color="#a0a0a0"/></span>
+                  <span style={{width:36}}/>
+                </div>}
+                {KS.map((k,i)=>(
+                  <div key={i} onClick={()=>setSelectedKS(k)} style={{display:"flex",alignItems:"center",padding:mobile?"12px 14px":"14px 16px",borderBottom:i<KS.length-1?"1px solid #f0f0ee":"none",cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.background="#fafafa"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                    <div style={{width:36,flexShrink:0}}><Ic name={k.type==="link"?"link":"textlines"} size={16} color="#6e6e6e"/></div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:14,fontWeight:500,color:"#1a1a1a"}}>{k.title}</div>
+                      {k.url&&<div style={{fontSize:12,color:"#a0a0a0",marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{k.url}</div>}
+                      {(mobile||compact)&&<div style={{fontSize:12,color:"#a0a0a0",marginTop:2}}>{k.updated}</div>}
+                    </div>
+                    {!mobile&&!compact&&<div style={{width:130,flexShrink:0,textAlign:"right",fontSize:13,color:"#6e6e6e"}}>{k.updated}</div>}
+                    <button onClick={e=>e.stopPropagation()} style={{width:32,flexShrink:0,display:"flex",justifyContent:"flex-end",background:"none",border:"none",cursor:"pointer",padding:0}}><Ic name="moredots" size={16} color="#a0a0a0"/></button>
                   </div>
-                  {!mobile&&!compact&&<div style={{width:130,flexShrink:0,textAlign:"right",fontSize:13,color:"#6e6e6e"}}>{k.updated}</div>}
-                  <button onClick={e=>e.stopPropagation()} style={{width:32,flexShrink:0,display:"flex",justifyContent:"flex-end",background:"none",border:"none",cursor:"pointer",padding:0}}><Ic name="moredots" size={16} color="#a0a0a0"/></button>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>}
       {pg==="behavior"&&<div><div style={{display:"flex",justifyContent:"flex-end",marginBottom:20}}><button style={{fontSize:14,color:"#fff",background:"#0078ff",border:"none",borderRadius:8,padding:"8px 20px",cursor:"pointer",fontWeight:600,fontFamily:"inherit"}}>Save</button></div>{[{k:"role",t:"AI Role",p:"e.g. Wedding Cake IG Creator",m:false},{k:"voice",t:"Brand Voice",p:"e.g. Warm tone...",m:true},{k:"guardrails",t:"Guardrails",p:"e.g. Never make promises...",m:true}].map(f=><div key={f.k} style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"20px 24px",marginBottom:16}}><div style={{fontSize:15,fontWeight:700,marginBottom:10}}>{f.t}</div>{f.m?<textarea value={beh[f.k]} onChange={e=>setBeh(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p} style={{width:"100%",minHeight:80,padding:12,borderRadius:10,border:"1px solid #e5e5e3",fontSize:14,background:"#fafafa",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical",outline:"none"}}/>:<input value={beh[f.k]} onChange={e=>setBeh(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p} style={{width:"100%",padding:12,borderRadius:10,border:"1px solid #e5e5e3",fontSize:14,background:"#fafafa",fontFamily:"inherit",boxSizing:"border-box",outline:"none"}}/>}</div>)}{!hb&&<button onClick={()=>setBeh(BF)} style={{fontSize:13,color:"#0078ff",background:"#eef4ff",border:"1px solid #bfdbfe",borderRadius:8,padding:"8px 16px",cursor:"pointer",fontFamily:"inherit"}}>Fill example</button>}</div>}
 
