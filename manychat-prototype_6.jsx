@@ -801,14 +801,14 @@ export default function App(){
       <div ref={splitRef} style={{display:"flex",flex:1,overflow:"hidden",userSelect:dragging?"none":"auto"}}>
         {/* Config column: tabs + content */}
         <div style={{flex:1,overflow:"hidden",display:"flex",flexDirection:"column"}}>
-          <div style={{display:"flex",height:48,alignItems:"stretch",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0}}>
+          {!editingKS&&<div style={{display:"flex",height:48,alignItems:"stretch",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0}}>
             {NV.map(n=>(
               <button key={n.id} onClick={()=>go(n.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"0 16px",alignSelf:"stretch",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
                 <Ic name={n.i} size={15} color={pg===n.id?"#1a1a1a":"#a0a0a0"}/>{n.l}
                 {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
               </button>
             ))}
-          </div>
+          </div>}
           <div style={{flex:1,overflow:"auto",background:"#f4f4f4"}}>
             {PageContent({})}
           </div>
