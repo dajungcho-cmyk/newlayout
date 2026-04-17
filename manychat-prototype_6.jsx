@@ -379,7 +379,7 @@ export default function App(){
 
   // Shared playground panel content
   const PlaygroundPanel = ({onClose=null}) => <>
-    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 16px",height:48,borderBottom:(anyOn||!fv)?"none":"1px solid #e5e5e3",flexShrink:0}}>
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 16px",height:48,borderBottom:"1px solid #e5e5e3",flexShrink:0}}>
       <span style={{fontSize:14,fontWeight:700}}>AI Playground</span>
       <div style={{display:"flex",gap:8,alignItems:"center"}}>
         <button onClick={()=>{setMs([]);setTyp(false);}} style={{fontSize:13,color:"#6e6e6e",background:"none",border:"1px solid #e5e5e3",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>Restart</button>
@@ -643,9 +643,9 @@ export default function App(){
       </div>
 
       {/* Tab strip */}
-      <div style={{display:"flex",borderBottom:"1px solid #e5e5e3",background:"#fff",flexShrink:0,overflowX:"auto",scrollbarWidth:"none"}}>
+      <div style={{display:"flex",height:48,alignItems:"stretch",borderBottom:"1px solid #e5e5e3",background:"#fff",flexShrink:0,overflowX:"auto",scrollbarWidth:"none"}}>
         {NV.map(n=>(
-          <button key={n.id} onClick={()=>{go(n.id);setSelectedKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",gap:5,padding:"10px 14px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
+          <button key={n.id} onClick={()=>{go(n.id);setSelectedKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",alignSelf:"stretch",gap:5,padding:"0 14px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
             {n.l}
             {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
           </button>
@@ -733,9 +733,9 @@ export default function App(){
       </div>
       {/* Right side: tabs + full-width content */}
       <div style={{display:"flex",flexDirection:"column",flex:1,overflow:"hidden"}}>
-        <div style={{display:"flex",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0,overflowX:"auto",scrollbarWidth:"none"}}>
+        <div style={{display:"flex",height:48,alignItems:"stretch",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0,overflowX:"auto",scrollbarWidth:"none"}}>
           {NV.map(n=>(
-            <button key={n.id} onClick={()=>{go(n.id);setSelectedKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",gap:6,padding:"10px 14px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
+            <button key={n.id} onClick={()=>{go(n.id);setSelectedKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",alignSelf:"stretch",gap:6,padding:"0 14px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
               <Ic name={n.i} size={15} color={pg===n.id?"#1a1a1a":"#a0a0a0"}/>{n.l}
               {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
             </button>
@@ -796,9 +796,9 @@ export default function App(){
       <div ref={splitRef} style={{display:"flex",flex:1,overflow:"hidden",userSelect:dragging?"none":"auto"}}>
         {/* Config column: tabs + content */}
         <div style={{flex:1,overflow:"hidden",display:"flex",flexDirection:"column"}}>
-          <div style={{display:"flex",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0}}>
+          <div style={{display:"flex",height:48,alignItems:"stretch",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0}}>
             {NV.map(n=>(
-              <button key={n.id} onClick={()=>go(n.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"10px 16px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
+              <button key={n.id} onClick={()=>go(n.id)} style={{display:"flex",alignItems:"center",gap:6,padding:"0 16px",alignSelf:"stretch",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
                 <Ic name={n.i} size={15} color={pg===n.id?"#1a1a1a":"#a0a0a0"}/>{n.l}
                 {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
               </button>
