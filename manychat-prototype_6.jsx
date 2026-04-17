@@ -264,61 +264,7 @@ export default function App(){
 
           const openEdit=(ks)=>{setEditingKS(ks);setEditDraft({title:ks.title,url:ks.url||"",content:ks.content,type:ks.type});};
 
-          /* ── DESKTOP: split list + detail/edit ── */
-          if(!mobile&&!compact&&selectedKS) return(
-            <div style={{display:"flex",gap:20,alignItems:"flex-start"}}>
-              {/* Left: source list */}
-              <div style={{width:220,flexShrink:0,background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",overflow:"hidden",position:"sticky",top:0}}>
-                <div style={{padding:"10px 14px",borderBottom:"1px solid #e5e5e3",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:11,fontWeight:700,color:"#a0a0a0",textTransform:"uppercase",letterSpacing:.5}}>Sources</span>
-                  <span style={{fontSize:11,color:"#a0a0a0"}}>{KS.length}</span>
-                </div>
-                {KS.map((k,i)=>(
-                  <div key={i} onClick={()=>{setSelectedKS(k);setEditingKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",borderBottom:i<KS.length-1?"1px solid #f0f0ee":"none",cursor:"pointer",background:selectedKS===k?"#eef4ff":"transparent",transition:"background .1s"}} onMouseEnter={e=>{if(selectedKS!==k)e.currentTarget.style.background="#fafafa";}} onMouseLeave={e=>{e.currentTarget.style.background=selectedKS===k?"#eef4ff":"transparent";}}>
-                    <Ic name={k.type==="link"?"link":"textlines"} size={14} color={selectedKS===k?"#0078ff":"#6e6e6e"}/>
-                    <span style={{fontSize:13,fontWeight:selectedKS===k?600:400,color:selectedKS===k?"#0078ff":"#1a1a1a",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",flex:1}}>{k.title}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Right: edit or detail */}
-              <div style={{flex:1,minWidth:0}}>
-                {editingKS ? (
-                  /* Desktop edit form */
-                  <div>
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
-                      <h2 style={{fontSize:17,fontWeight:700}}>Edit source</h2>
-                      <div style={{display:"flex",gap:8}}>
-                        <button onClick={()=>setEditingKS(null)} style={{padding:"8px 18px",borderRadius:8,border:"1px solid #e5e5e3",background:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:500}}>Cancel</button>
-                        <button onClick={()=>setEditingKS(null)} style={{padding:"8px 18px",borderRadius:8,border:"none",background:"#1a1a1a",color:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:600}}>Save changes</button>
-                      </div>
-                    </div>
-                    <EditFormFields/>
-                  </div>
-                ) : (
-                  /* Desktop detail panel (no back btn — list always visible) */
-                  <div>
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
-                      <h2 style={{fontSize:17,fontWeight:700}}>{selectedKS.title}</h2>
-                      <button onClick={()=>openEdit(selectedKS)} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"1px solid #e5e5e3",borderRadius:8,padding:"6px 14px",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:500,color:"#1a1a1a"}} onMouseEnter={e=>e.currentTarget.style.background="#f4f4f4"} onMouseLeave={e=>e.currentTarget.style.background="none"}>
-                        <Ic name="edit" size={13} color="#1a1a1a"/>Edit
-                      </button>
-                    </div>
-                    <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"16px 20px",marginBottom:16,display:"flex",flexDirection:"column",gap:10}}>
-                      {selectedKS.type==="link"&&<div style={{display:"flex",alignItems:"flex-start",gap:12}}><Ic name="link" size={15} color="#a0a0a0"/><div><div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:2}}>Sourced URL</div><div style={{fontSize:13,color:"#0078ff",wordBreak:"break-all"}}>{selectedKS.url}</div></div></div>}
-                      <div style={{display:"flex",alignItems:"center",gap:12}}><Ic name="chart" size={15} color="#a0a0a0"/><div><div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:2}}>Last updated</div><div style={{fontSize:13}}>{selectedKS.updated}</div></div></div>
-                    </div>
-                    <div style={{background:"#fff",borderRadius:12,border:"1px solid #e5e5e3",padding:"20px 24px"}}>
-                      <div style={{fontSize:11,fontWeight:600,color:"#a0a0a0",textTransform:"uppercase",marginBottom:14}}>Content</div>
-                      <div style={{fontSize:14,lineHeight:1.7}}><Highlighted key={highlightTexts.join("|")} text={selectedKS.content} highlights={highlightTexts}/></div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-
-          /* ── MOBILE/COMPACT: drill-down ── */
+          /* ── ALL BREAKPOINTS: clean drill-down (list → detail → edit) ── */
 
           if(editingKS) return(
             /* Edit form */
