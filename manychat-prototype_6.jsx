@@ -269,18 +269,20 @@ export default function App(){
           if(editingKS) return(
             /* Edit form */
             <div>
-              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
-                <button onClick={()=>setEditingKS(null)} style={{display:"flex",alignItems:"center",gap:4,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,color:"#6e6e6e",padding:"4px 0",flexShrink:0}} onMouseEnter={e=>e.currentTarget.style.color="#1a1a1a"} onMouseLeave={e=>e.currentTarget.style.color="#6e6e6e"}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12l7 7M5 12l7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                </button>
-                <span style={{fontSize:mobile?17:18,fontWeight:700,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>Edit source</span>
+              {/* Header: title + actions */}
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
+                <span style={{fontSize:mobile?17:18,fontWeight:700}}>Edit source</span>
+                {!mobile&&<div style={{display:"flex",gap:8}}>
+                  <button onClick={()=>setEditingKS(null)} style={{padding:"8px 18px",borderRadius:8,border:"1px solid #e5e5e3",background:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:500}}>Cancel</button>
+                  <button onClick={()=>setEditingKS(null)} style={{padding:"8px 18px",borderRadius:8,border:"none",background:"#1a1a1a",color:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:600}}>Save changes</button>
+                </div>}
               </div>
               {EditFormFields()}
-              {/* Sticky save bar (mobile) / inline (compact) */}
-              <div style={mobile?{position:"sticky",bottom:0,background:"#fff",borderTop:"1px solid #e5e5e3",padding:"10px 16px",display:"flex",gap:8,justifyContent:"flex-end",marginLeft:-16,marginRight:-16}:{display:"flex",gap:8,justifyContent:"flex-end"}}>
+              {/* Mobile: sticky bottom bar for thumb reach */}
+              {mobile&&<div style={{position:"sticky",bottom:0,background:"#fff",borderTop:"1px solid #e5e5e3",padding:"10px 16px",display:"flex",gap:8,justifyContent:"flex-end",marginLeft:-16,marginRight:-16}}>
                 <button onClick={()=>setEditingKS(null)} style={{padding:"9px 20px",borderRadius:8,border:"1px solid #e5e5e3",background:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:500}}>Cancel</button>
                 <button onClick={()=>setEditingKS(null)} style={{padding:"9px 20px",borderRadius:8,border:"none",background:"#1a1a1a",color:"#fff",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:600}}>Save changes</button>
-              </div>
+              </div>}
             </div>
           );
 
