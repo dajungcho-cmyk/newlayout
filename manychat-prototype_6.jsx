@@ -648,14 +648,14 @@ export default function App(){
       </div>
 
       {/* Tab strip */}
-      <div style={{display:"flex",height:48,alignItems:"stretch",borderBottom:"1px solid #e5e5e3",background:"#fff",flexShrink:0,overflowX:"auto",scrollbarWidth:"none"}}>
+      {!editingKS&&<div style={{display:"flex",height:48,alignItems:"stretch",borderBottom:"1px solid #e5e5e3",background:"#fff",flexShrink:0,overflowX:"auto",scrollbarWidth:"none"}}>
         {NV.map(n=>(
           <button key={n.id} onClick={()=>{go(n.id);setSelectedKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",alignSelf:"stretch",gap:5,padding:"0 14px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
             {n.l}
             {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
           </button>
         ))}
-      </div>
+      </div>}
 
       {/* Main content */}
       <div style={{flex:1,overflow:"auto",background:"#f4f4f4"}}>
@@ -738,14 +738,14 @@ export default function App(){
       </div>
       {/* Right side: tabs + full-width content */}
       <div style={{display:"flex",flexDirection:"column",flex:1,overflow:"hidden"}}>
-        <div style={{display:"flex",height:48,alignItems:"stretch",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0,overflowX:"auto",scrollbarWidth:"none"}}>
+        {!editingKS&&<div style={{display:"flex",height:48,alignItems:"stretch",borderBottom:"1px solid #e5e5e3",background:"#f4f4f4",flexShrink:0,overflowX:"auto",scrollbarWidth:"none"}}>
           {NV.map(n=>(
             <button key={n.id} onClick={()=>{go(n.id);setSelectedKS(null);setHighlightTexts([]);}} style={{display:"flex",alignItems:"center",alignSelf:"stretch",gap:6,padding:"0 14px",border:"none",borderBottom:pg===n.id?"2px solid #1a1a1a":"2px solid transparent",background:"transparent",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:pg===n.id?600:400,color:pg===n.id?"#1a1a1a":"#6e6e6e",whiteSpace:"nowrap",flexShrink:0}}>
               <Ic name={n.i} size={15} color={pg===n.id?"#1a1a1a":"#a0a0a0"}/>{n.l}
               {n.b&&<span style={{fontSize:9,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#5b5fc7",color:"#fff"}}>{n.b}</span>}
             </button>
           ))}
-        </div>
+        </div>}
         <div style={{flex:1,overflow:"auto",background:"#f4f4f4"}}>
           {PageContent({compact:true})}
         </div>
